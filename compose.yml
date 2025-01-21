@@ -1,8 +1,6 @@
-#simple php apache server with sync document root
-
 services:
   web:
-    image: php:apache
+    build: .
     ports:
       - "80:80"
     volumes:
@@ -11,3 +9,28 @@ services:
       sh -c "apt-get update && apt-get install -y curl git unzip && 
              curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&
              apache2-foreground"
+
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+
+volumes:
+  data:

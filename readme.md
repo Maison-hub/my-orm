@@ -1,5 +1,14 @@
 # TP 1
-## Membres :
-- Vadim Khenfer
-- Benjamin Auger 
 - Antoine Rubéo-Lisa
+
+## Pour lancer le programme
+- Ouvrir un terminal
+- Se placer dans le dossier du projet
+
+```bash
+docker compose up -d
+```
+puis 
+```bash
+docker compose exec web php exercice.php
+```

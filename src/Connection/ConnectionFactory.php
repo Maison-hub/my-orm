@@ -1,8 +1,15 @@
 <?php
-class ConnectionFactory {
-    private static $connection = null;
 
-    public static function makeConnection($conf) {
+namespace iutnc\hellokant\Connection;
+
+use Exception;
+use PDO;
+use PDOException;
+
+class ConnectionFactory {
+    private static \PDO|null $connection = null;
+
+    public static function makeConnection(array $conf) {
         $dsn = "mysql:host={$conf['host']};dbname={$conf['dbname']};charset=utf8";
         $options = [
             PDO::ATTR_PERSISTENT => true,
@@ -12,7 +19,7 @@ class ConnectionFactory {
         ];
 
         try {
-            self::$connection = new PDO($dsn, $conf['username'], $conf['password'], $options);
+            self::$connection = new PDO($dsn, $conf['user'], $conf['password'], $options);
         } catch (PDOException $e) {
             throw new Exception("Connection failed: " . $e->getMessage());
         }
@@ -20,7 +27,8 @@ class ConnectionFactory {
         return self::$connection;
     }
 
-    public static function getConnection() {
+    public static function getConnection(): PDO
+    {
         if (self::$connection === null) {
             throw new Exception("Connection has not been established. Call makeConnection first.");
         }
